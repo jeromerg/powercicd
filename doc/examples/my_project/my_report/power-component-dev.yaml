@@ -1,0 +1,19 @@
+type: powerbi
+schedule:
+  enabled: true
+  localTimeZoneId: "Romance Standard Time"
+  days:
+    - Monday
+    - Tuesday
+    - Wednesday
+    - Thursday
+    - Friday
+  times:
+    - 08:00
+    - 12:00
+    - 16:00
+  NotifyOption: NoNotification
+dataset_parameters:
+  STAGE: DEV
+powerapps_id_by_name:
+  my_power_app: 12345678-1234-1234-1234-123456789012

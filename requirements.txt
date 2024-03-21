@@ -1,0 +1,11 @@
+requests
+selenium
+ipykernel
+click
+jsonpath-ng
+pydantic
+azure-identity
+nest_asyncio
+aiohttp
+pyyaml
+pytest

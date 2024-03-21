@@ -1,0 +1,549 @@
+{
+  "id": 0,
+  "resourcePackages": [
+    {
+      "resourcePackage": {
+        "name": "SharedResources",
+        "type": 2,
+        "items": [
+          {
+            "type": 202,
+            "path": "BaseThemes/CY24SU02.json",
+            "name": "CY24SU02"
+          }
+        ],
+        "disabled": false
+      }
+    }
+  ],
+  "sections": [
+    {
+      "id": 0,
+      "name": "ReportSection",
+      "displayName": "Page 1",
+      "filters": "[]",
+      "ordinal": 0,
+      "visualContainers": [
+        {
+          "x": 492.7415801070192,
+          "y": 116.43689014793831,
+          "z": 0,
+          "width": 273.9691532892666,
+          "height": 117.64557758892037,
+          "config": {
+            "name": "2f25ce7c5cfea6d9634e",
+            "layouts": [
+              {
+                "id": 0,
+                "position": {
+                  "x": 492.7415801070192,
+                  "y": 116.43689014793831,
+                  "z": 0,
+                  "width": 273.9691532892666,
+                  "height": 117.64557758892037,
+                  "tabOrder": 0
+                }
+              }
+            ],
+            "singleVisual": {
+              "visualType": "textbox",
+              "drillFilterOtherVisuals": true,
+              "objects": {
+                "general": [
+                  {
+                    "properties": {
+                      "paragraphs": [
+                        {
+                          "textRuns": [
+                            {
+                              "value": ""
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "filters": []
+        },
+        {
+          "x": 10.072395341517154,
+          "y": 0,
+          "z": 1000,
+          "width": 273.9691532892666,
+          "height": 143.83380547686497,
+          "config": {
+            "name": "f5d525ec0ecf0385e295",
+            "layouts": [
+              {
+                "id": 0,
+                "position": {
+                  "x": 10.072395341517154,
+                  "y": 0,
+                  "z": 1000,
+                  "width": 273.9691532892666,
+                  "height": 143.83380547686497,
+                  "tabOrder": 1000
+                }
+              }
+            ],
+            "singleVisual": {
+              "visualType": "textbox",
+              "drillFilterOtherVisuals": true,
+              "objects": {
+                "general": [
+                  {
+                    "properties": {
+                      "paragraphs": [
+                        {
+                          "textRuns": [
+                            {
+                              "value": "The allow build process to adapt the power apps id to the corresponding app of the deployment stage, you need to add the following string to the \"Alt text\" of the power apps visual:",
+                              "textStyle": {
+                                "fontSize": "8pt"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "textRuns": [
+                            {
+                              "value": ""
+                            }
+                          ]
+                        },
+                        {
+                          "textRuns": [
+                            {
+                              "value": "[[[",
+                              "textStyle": {
+                                "fontSize": "8pt",
+                                "color": "#d7ba7d"
+                              }
+                            },
+                            {
+                              "value": "powerapps:<here_the_name_of_the_app>",
+                              "textStyle": {
+                                "fontSize": "8pt",
+                                "color": "#d16969"
+                              }
+                            },
+                            {
+                              "value": ")",
+                              "textStyle": {
+                                "fontSize": "8pt",
+                                "color": "#ce9178"
+                              }
+                            },
+                            {
+                              "value": "]]]",
+                              "textStyle": {
+                                "fontSize": "8pt",
+                                "color": "#d7ba7d"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "filters": [],
+          "tabOrder": 1000
+        },
+        {
+          "x": 355.7570034623859,
+          "y": 0,
+          "z": 2000,
+          "width": 273.9691532892666,
+          "height": 116.43689014793831,
+          "config": {
+            "name": "9e528e13632f4fcc015f",
+            "layouts": [
+              {
+                "id": 0,
+                "position": {
+                  "x": 355.7570034623859,
+                  "y": 0,
+                  "z": 2000,
+                  "width": 273.9691532892666,
+                  "height": 116.43689014793831,
+                  "tabOrder": 2000
+                }
+              }
+            ],
+            "singleVisual": {
+              "visualType": "textbox",
+              "drillFilterOtherVisuals": true,
+              "objects": {
+                "general": [
+                  {
+                    "properties": {
+                      "paragraphs": [
+                        {
+                          "textRuns": [
+                            {
+                              "value": "To allow the build process to set the report version, you need to add the following string to the \"Alt text\" of the textbox that should display the version:",
+                              "textStyle": {
+                                "fontSize": "8pt"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "textRuns": [
+                            {
+                              "value": ""
+                            }
+                          ]
+                        },
+                        {
+                          "textRuns": [
+                            {
+                              "value": ""
+                            }
+                          ]
+                        },
+                        {
+                          "textRuns": [
+                            {
+                              "value": "[[[",
+                              "textStyle": {
+                                "fontSize": "8pt",
+                                "color": "#d7ba7d"
+                              }
+                            },
+                            {
+                              "value": "report_version",
+                              "textStyle": {
+                                "fontSize": "8pt",
+                                "color": "#d16969"
+                              }
+                            },
+                            {
+                              "value": "]]]",
+                              "textStyle": {
+                                "fontSize": "8pt",
+                                "color": "#d7ba7d"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "textRuns": [
+                            {
+                              "value": ""
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "filters": [],
+          "tabOrder": 2000
+        },
+        {
+          "x": 355.7570034623859,
+          "y": 143.83380547686497,
+          "z": 3000,
+          "width": 278.4010072395342,
+          "height": 31.425873465533524,
+          "config": {
+            "name": "e2d9262ace56dd4fe74f",
+            "layouts": [
+              {
+                "id": 0,
+                "position": {
+                  "x": 355.7570034623859,
+                  "y": 143.83380547686497,
+                  "z": 3000,
+                  "width": 278.4010072395342,
+                  "height": 31.425873465533524,
+                  "tabOrder": 3000
+                }
+              }
+            ],
+            "singleVisual": {
+              "visualType": "textbox",
+              "drillFilterOtherVisuals": true,
+              "objects": {
+                "general": [
+                  {
+                    "properties": {
+                      "paragraphs": [
+                        {
+                          "textRuns": [
+                            {
+                              "value": "REPORT_VERSION_REMOVED_BY_BUILD_SCRIPT",
+                              "textStyle": {
+                                "fontSize": "8pt"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "vcObjects": {
+                "general": [
+                  {
+                    "properties": {
+                      "altText": {
+                        "expr": {
+                          "Literal": {
+                            "Value": "'[[[report_version]]]'"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "filters": [],
+          "tabOrder": 3000
+        },
+        {
+          "x": 10.072395341517154,
+          "y": 230.4564054139125,
+          "z": 4000,
+          "width": 273.9691532892666,
+          "height": 468.1649354737174,
+          "config": {
+            "name": "0fb6a3d1f8093f75780f",
+            "layouts": [
+              {
+                "id": 0,
+                "position": {
+                  "x": 10.072395341517154,
+                  "y": 230.4564054139125,
+                  "z": 4000,
+                  "width": 273.9691532892666,
+                  "height": 468.1649354737174,
+                  "tabOrder": 4000
+                }
+              }
+            ],
+            "singleVisual": {
+              "visualType": "PowerApps_PBI_CV_C29F1DCC_81F5_4973_94AD_0517D44CC06A",
+              "projections": {
+                "table": [
+                  {
+                    "queryRef": "Table.key"
+                  }
+                ]
+              },
+              "prototypeQuery": {
+                "Version": 2,
+                "From": [
+                  {
+                    "Name": "t",
+                    "Entity": "Table",
+                    "Type": 0
+                  }
+                ],
+                "Select": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "t"
+                        }
+                      },
+                      "Property": "key"
+                    },
+                    "Name": "Table.key",
+                    "NativeReferenceName": "key"
+                  }
+                ]
+              },
+              "drillFilterOtherVisuals": true,
+              "objects": {
+                "general": [
+                  {
+                    "properties": {
+                      "appId": {
+                        "expr": {
+                          "Literal": {
+                            "Value": "POWERAPPS_APP_ID_REMOVED_BY_BUILD_SCRIPT"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              "vcObjects": {
+                "general": [
+                  {
+                    "properties": {
+                      "altText": {
+                        "expr": {
+                          "Literal": {
+                            "Value": "'[[[powerapps:my_powerapps_app]]]'"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "filters": [],
+          "tabOrder": 4000,
+          "query": {
+            "Commands": [
+              {
+                "SemanticQueryDataShapeCommand": {
+                  "Query": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "t",
+                        "Entity": "Table",
+                        "Type": 0
+                      }
+                    ],
+                    "Select": [
+                      {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Source": "t"
+                            }
+                          },
+                          "Property": "key"
+                        },
+                        "Name": "Table.key",
+                        "NativeReferenceName": "key"
+                      }
+                    ]
+                  },
+                  "Binding": {
+                    "Primary": {
+                      "Groupings": [
+                        {
+                          "Projections": [
+                            0
+                          ]
+                        }
+                      ]
+                    },
+                    "DataReduction": {
+                      "DataVolume": 3,
+                      "Primary": {
+                        "Top": {}
+                      }
+                    },
+                    "Version": 1
+                  },
+                  "ExecutionMetricsKind": 1
+                }
+              }
+            ]
+          },
+          "dataTransforms": {
+            "objects": {
+              "general": [
+                {
+                  "properties": {
+                    "appId": {
+                      "expr": {
+                        "Literal": {
+                          "Value": "'/providers/Microsoft.PowerApps/apps/b944ef36-81f7-482c-a6d6-f29c9f89eabc'"
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "projectionOrdering": {
+              "table": [
+                0
+              ]
+            },
+            "queryMetadata": {
+              "Select": [
+                {
+                  "Restatement": "key",
+                  "Name": "Table.key",
+                  "Type": 2048
+                }
+              ],
+              "Filters": [
+                {
+                  "type": 0,
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Table"
+                        }
+                      },
+                      "Property": "key"
+                    }
+                  }
+                }
+              ]
+            },
+            "visualElements": [
+              {
+                "DataRoles": [
+                  {
+                    "Name": "table",
+                    "Projection": 0,
+                    "isActive": false
+                  }
+                ]
+              }
+            ],
+            "selects": [
+              {
+                "displayName": "key",
+                "queryName": "Table.key",
+                "roles": {
+                  "table": true
+                },
+                "type": {
+                  "category": null,
+                  "underlyingType": 1
+                },
+                "expr": {
+                  "Column": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "Table"
+                      }
+                    },
+                    "Property": "key"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "config": "{}",
+      "displayOption": 1,
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "config": "{\"version\":\"5.51\",\"themeCollection\":{\"baseTheme\":{\"name\":\"CY24SU02\",\"version\":\"5.51\",\"type\":2}},\"activeSectionIndex\":0,\"defaultDrillFilterOtherVisuals\":true,\"linguisticSchemaSyncVersion\":2,\"settings\":{\"useNewFilterPaneExperience\":true,\"allowChangeFilterTypes\":true,\"useStylableVisualContainerHeader\":true,\"queryLimitOption\":6,\"useEnhancedTooltips\":true,\"exportDataMode\":1,\"useDefaultAggregateDisplayName\":true},\"objects\":{\"section\":[{\"properties\":{\"verticalAlignment\":{\"expr\":{\"Literal\":{\"Value\":\"'Top'\"}}}}}]}}",
+  "layoutOptimization": 0
+}

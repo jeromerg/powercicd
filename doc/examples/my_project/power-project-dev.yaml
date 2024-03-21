@@ -1,0 +1,8 @@
+# The tenant where the project is deployed
+tenant: airsecoma.com
+# The project version: the result version will have the following format <major>.<minor>.<build>M, where <build> is the build number
+# reduced by the value of build_ground. The flag M will be set, if some files have been modified since the last git commit
+version:
+  major: 1
+  minor: 0
+  build_ground: 0
