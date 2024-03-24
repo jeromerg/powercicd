@@ -1,0 +1,123 @@
+{
+  "$defs": {
+    "ComponentConfig": {
+      "properties": {
+        "type": {
+          "const": null,
+          "default": null,
+          "description": "The type of the component",
+          "title": "Type"
+        },
+        "name": {
+          "description": "The name of the component",
+          "title": "Name",
+          "type": "string"
+        },
+        "depends_on": {
+          "description": "The components this component depends on",
+          "items": {
+            "type": "string"
+          },
+          "title": "Depends On",
+          "type": "array"
+        },
+        "parent_project": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ProjectConfig"
+            }
+          ],
+          "default": null,
+          "description": "The root folder of the component"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "ComponentConfig",
+      "type": "object"
+    },
+    "ProjectConfig": {
+      "properties": {
+        "tenant": {
+          "description": "The tenant of the project. Either the tenant ID or the tenant name (i.e. abc.onmicrosoft.com)",
+          "title": "Tenant",
+          "type": "string"
+        },
+        "version": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ProjectVersion"
+            }
+          ],
+          "description": "The version of the project"
+        },
+        "components": {
+          "items": {
+            "$ref": "#/$defs/ComponentConfig"
+          },
+          "title": "Components",
+          "type": "array"
+        },
+        "project_root": {
+          "default": null,
+          "description": "The root folder of the project",
+          "title": "Project Root",
+          "type": "string"
+        },
+        "components_by_name": {
+          "additionalProperties": {
+            "$ref": "#/$defs/ComponentConfig"
+          },
+          "default": null,
+          "description": "The components by name",
+          "title": "Components By Name",
+          "type": "object"
+        }
+      },
+      "required": [
+        "tenant",
+        "version"
+      ],
+      "title": "ProjectConfig",
+      "type": "object"
+    },
+    "ProjectVersion": {
+      "properties": {
+        "major": {
+          "description": "The major version of the project",
+          "title": "Major",
+          "type": "integer"
+        },
+        "minor": {
+          "description": "The minor version of the project",
+          "title": "Minor",
+          "type": "integer"
+        },
+        "build_ground": {
+          "description": "The ground number to subtract from the total amount of commits to calculate the build number",
+          "title": "Build Ground",
+          "type": "integer"
+        },
+        "resulting_version": {
+          "default": null,
+          "description": "The version of the project",
+          "title": "Resulting Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "major",
+        "minor",
+        "build_ground"
+      ],
+      "title": "ProjectVersion",
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "#/$defs/ProjectConfig"
+    }
+  ]
+}

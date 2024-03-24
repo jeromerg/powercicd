@@ -1,5 +1,7 @@
 type: powerbi
-schedule:
+group_name: my-workspace-dev
+report_name: my-report
+refresh_schedule:
   enabled: true
   localTimeZoneId: "Romance Standard Time"
   days:

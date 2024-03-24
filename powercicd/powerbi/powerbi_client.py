@@ -1,7 +1,7 @@
 # %%
-import functools
 import gzip
 import logging
+import re
 import time
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -16,6 +16,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from powercicd.powerbi.config import DatasetRefreshSchedule, Report, Group, Datasource
+from powercicd.shared.logging_utils import log_call
 from powercicd.shared.selenium_common import new_browser
 
 # %%
@@ -23,34 +25,6 @@ log = logging.getLogger(__name__)
 
 
 # TODO: Migrate whole retrieve and deploy scripts to python by using example: https://github.com/Azure-Samples/powerbi-powershell/blob/master/manageRefresh.ps1
-
-
-
-# decorator to log entry and exit of a class method
-call_depth = 0
-
-
-def log_call():
-    def log_call_decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            global call_depth
-            prefix = "#" * call_depth
-            non_self_args = args[1:]
-            all_args_str = [str(arg) for arg in non_self_args] + [f"{key}={value}" for key, value in kwargs.items()]
-            log.info(f"Entering {func.__name__}: {', '.join(all_args_str)}")
-            call_depth += 1
-            try:
-                result = func(*args, **kwargs)
-                log.info(f"Exiting {func.__name__}")
-            except:
-                log.exception(f"Exiting {func.__name__} with exception")
-                raise
-            finally:
-                call_depth -= 1
-            return result
-        return wrapper
-    return log_call_decorator
 
 
 def build_datasource_key(ds) -> str:
@@ -111,7 +85,11 @@ class PowerBiWebClient:
             })
         return self._session
 
-    def is_someone_logged_in(self):
+    def login_in_api(self):
+        dummy = self.token_string
+        log.info("Logged in to Power BI API")
+
+    def is_logged_in_in_browser(self):
         log.info("Verifying login to Power BI")
 
         log.info(f"Opening the Power BI tenant site: '{self.powerbi_url}'")
@@ -126,14 +104,14 @@ class PowerBiWebClient:
             log.info("Not logged in.")
             return False
         
-    def login_if_required(self):
-        if self.is_someone_logged_in():        
+    def login_in_browser(self):
+        if self.is_logged_in_in_browser():
             return
 
         print("-------------------------------------------------------------------------------")
         input("Please login manually in the opened browser window and press Enter to continue.")
         
-        if not self.is_someone_logged_in():
+        if not self.is_logged_in_in_browser():
             raise ValueError("Login check failed even after manual login. Please check the opened browser window.")
 
     @log_call()
@@ -315,43 +293,55 @@ class PowerBiWebClient:
         )
 
     @log_call()
-    def deploy_app(self, group_id: str):
-        # %%
-        group_url = f"https://app.powerbi.com/groups/{group_id}/list?ctid={self.tenant}&experience=power-bi"
-        log.info(f"Opening the group: '{group_url}'")
-        self.browser.get(group_url)
+    def deploy_app(self, group_id: str, log_dir: str):
+        try:
+            # %%
+            group_url = f"https://app.powerbi.com/groups/{group_id}/list?ctid={self.tenant}&experience=power-bi"
+            log.info(f"Opening the group: '{group_url}'")
+            self.browser.get(group_url)
 
-        # %%
-        log.info("Waiting for the update app button in group view to appear...")
-        update_button = self.wait_browser.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-testid='update-app']")))
-        update_button.click()
+            # %%
+            log.info("Waiting for the update app button in group view to appear...")
+            update_button = self.wait_browser.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-testid='update-app']")))
+            update_button.click()
 
-        # %%
-        log.info("Waiting for the update app button in update dialog to appear...")
-        update_app_publish_button = self.wait_browser.until(EC.presence_of_element_located((By.CSS_SELECTOR, "button[data-testid='update-app-publish']")))
-        # check if the button is enabled
-        if not update_app_publish_button.is_enabled():
-            inp = input("The 'Update app' button is not enabled. Please publish manually. Continue normally? (y/n)")
-            if inp.lower() not in ("y", "yes"):
-                raise ValueError("User aborted the deployment.")
-        log.info("Publishing the app... ('Update app' button is enabled)")
-        update_app_publish_button.click()
+            # %%
+            log.info("Waiting for the update app button in update dialog to appear...")
+            update_app_publish_button = self.wait_browser.until(EC.presence_of_element_located((By.CSS_SELECTOR, "button[data-testid='update-app-publish']")))
+            # check if the button is enabled
+            if not update_app_publish_button.is_enabled():
+                screenshot_path = f"{log_dir}/disabled_update_screenshot.png"
+                self.browser.save_screenshot(screenshot_path)
+                log.warning(
+                    f"The 'Update app' button is disabled. You need to deploy manually to (re-)configure the app!" 
+                    f"\n  --> URL '{self.browser.current_url}'. \n --> Screen shot saved to '{screenshot_path}'"
+                )
+                return
+            log.info("Publishing the app... ('Update app' button is enabled)")
+            update_app_publish_button.click()
 
-        # %%
-        ok_button = self.wait_browser.until(EC.element_to_be_clickable((By.ID, "okButton")))
-        ok_button.click()
+            # %%
+            ok_button = self.wait_browser.until(EC.element_to_be_clickable((By.ID, "okButton")))
+            ok_button.click()
 
-        # %%
-        input_publish_url = self.wait_browser.until(EC.presence_of_element_located((By.ID, "app-publish-url")))
-        publish_url = input_publish_url.get_attribute("value")
-        log.info(f"!!!! Published app URL: {publish_url}")
+            # %%
+            input_publish_url = self.wait_browser.until(EC.presence_of_element_located((By.ID, "app-publish-url")))
+            publish_url = input_publish_url.get_attribute("value")
+            log.info(f"!!!! Published app URL: {publish_url}")
+        except:
+            screenshot_path = f"{log_dir}/error_screenshot.png"
+            self.browser.save_screenshot(screenshot_path)
+            log.exception("Failed to deploy the app. Screen shot saved to '{screenshot_path}'")
+            raise
 
     @log_call()
     def cleanup_reports(self, group_id: str, cleanup_regex: str, exclude_report_names: list[str]):
         exclude_report_names = set(exclude_report_names)
 
+        re_cleanup = re.compile(cleanup_regex)
+
         reports = self.session.get(f"https://api.powerbi.com/v1.0/myorg/groups/{group_id}/reports").json()["value"]
-        reports_to_delete = [r for r in reports if cleanup_regex in r["Name"] and r["Name"] not in exclude_report_names]
+        reports_to_delete = [r for r in reports if re_cleanup.match(r["Name"]) and r["Name"] not in exclude_report_names]
         for report in reports_to_delete:
             report_id = report["Id"]
             try:
@@ -383,7 +373,6 @@ class PowerBiWebClient:
         file_path: str,
         dataset_parameters: dict[str, str] = None,
         refresh_schedule: DatasetRefreshSchedule | None = None,
-        deploy_app: bool = False,
         cleanup_regex: str | None = None,
     ):
         report_before = self.try_get_report_by_name(group_id, upload_report_name)
@@ -441,18 +430,11 @@ class PowerBiWebClient:
             self.wait_for_end_of_any_active_dataset_refresh(group_id, final_report_dataset_id)
             self.update_report_content(group_id, final_report_id, report_id)
             self.rebind_report_to_dataset(group_id, final_report_id, dataset_id)
-            self.deploy_app(group_id)
         else:
             self.clone_report(group_id, report_id, final_report_name)
             final_report = self.try_get_report_by_name(group_id, final_report_name)
             final_report_id = final_report["id"]
             final_report_dataset_id = final_report["datasetId"]
-            if deploy_app:
-                log.warning(
-                    f"Deploying the app assumes that the app is already configured. As the final report"
-                    f" '{final_report_name}' is newly created, the app deployment will be skipped."
-                    " Please configure the app manually."
-                )
 
         # cleanup
         if cleanup_regex is not None:

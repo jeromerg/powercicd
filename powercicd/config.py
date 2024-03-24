@@ -6,14 +6,14 @@ import logging
 
 from pydantic import BaseModel, Field
 
-from powercicd.powerbi.config import PowerBIComponentConfig
+from powercicd.powerbi.config import PowerBiComponentConfig
 from powercicd.powerbi.file_utils import find_parent_dir_where_exists_file
 from powercicd.shared.config import ProjectConfig, ComponentConfig
 from powercicd.sharepoint.config import SharepointComponentConfig
 from powercicd.powerapps.config import PowerAppsComponentConfig
 
 
-AnyComponent = Union[PowerBIComponentConfig, PowerAppsComponentConfig, SharepointComponentConfig]
+AnyComponent = Union[PowerBiComponentConfig, PowerAppsComponentConfig, SharepointComponentConfig]
 
 
 PROJECT_CONFIG_FILENAME_FMT   : str = "power-project-{env}.yaml"
@@ -34,10 +34,10 @@ class AllComponentsDeserializer(BaseModel):
         return cls.model_validate(component_config_json).component
 
 
-def get_current_version(project_root, project_config):
-    major_version = project_config["version"]["major"]
-    minor_version = project_config["version"]["minor"]
-    build_ground  = project_config["version"]["build_ground"]
+def get_current_version(project_root: str, project_config: ProjectConfig):
+    major_version = project_config.version.major
+    minor_version = project_config.version.minor
+    build_ground  = project_config.version.build_ground
 
     count_commits = int(os.popen(f"git -C {project_root} rev-list HEAD --count").read().strip())
     are_changes = os.popen(f"git -C {project_root} status --porcelain").read().strip() != ""
@@ -72,7 +72,7 @@ def get_project_config(stage: str, lookup_path: str = None) -> ProjectConfig:
     project_config.version.resulting_version = get_current_version(project_root, project_config)
 
     # load component configs
-    project_config["components"] = []
+    project_config.components = []
     component_config_files = [f for f in glob.glob(f"{project_root}/{component_config_filename}")]
     for component_config_file in component_config_files:
         log.info(f"Reading component config from '{component_config_file}'")

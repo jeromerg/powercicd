@@ -1,22 +1,23 @@
 from typing import Literal, List
 
 from pydantic import BaseModel, Field
+from typing_extensions import Annotated
 
 
 class ProjectVersion(BaseModel):
-    major              : int = Field(... , description="The major version of the project")
-    minor              : int = Field(... , description="The minor version of the project")
-    build_ground       : int = Field(..., description="The ground number to subtract from the total amount of commits to calculate the build number")
+    major              : Annotated[int, Field(description="The major version of the project")]
+    minor              : Annotated[int, Field(description="The minor version of the project")]
+    build_ground       : Annotated[int, Field(description="The ground number to subtract from the total amount of commits to calculate the build number")]
     # excluded fields
-    resulting_version  : str = Field(None, exclude=True, description="The version of the project")
+    resulting_version  : Annotated[str, Field(exclude=True, description="The version of the project")] = None
 
 
 class ComponentConfig(BaseModel):
-    type           : Literal[None]   = Field(None, description="The type of the component")
-    name           : str             = Field(..., description="The name of the component")
-    depends_on     : List[str]       = Field(default_factory=list, description="The components this component depends on")
+    type           : Annotated[Literal[None]   , Field(description="The type of the component")] = None
+    name           : Annotated[str             , Field(description="The name of the component")]
+    depends_on     : Annotated[List[str]       , Field(default_factory=list, description="The components this component depends on")]
     # excluded fields
-    parent_project : "ProjectConfig" = Field(None, exclude=True, description="The root folder of the component")
+    parent_project : Annotated["ProjectConfig" , Field(exclude=True, description="The root folder of the component")] = None
 
     @property
     def component_root(self):
@@ -24,15 +25,15 @@ class ComponentConfig(BaseModel):
 
 
 class ProjectConfig(BaseModel):
-    tenant       : str = Field(..., description="The tenant of the project. Either the tenant ID or the tenant name (i.e. abc.onmicrosoft.com)")
-    version      : ProjectVersion
+    tenant             : Annotated[str, Field(description="The tenant of the project. Either the tenant ID or the tenant name (i.e. abc.onmicrosoft.com)")]
+    version            : Annotated[ProjectVersion, Field(description="The version of the project")]
     # excluded fields
-    components   : List[ComponentConfig] = Field(default_factory=list, exclude=True)
-    project_root : str = Field(None, exclude=True, description="The root folder of the project")
-    _components_by_name : dict[str, ComponentConfig] = Field(default_factory=None, exclude=True, description="The components by name")
+    components         : Annotated[List[ComponentConfig], Field(default_factory=list, exclude=True)]
+    project_root       : Annotated[str, Field(exclude=True, description="The root folder of the project")] = None
+    components_by_name : Annotated[dict[str, ComponentConfig], Field(exclude=True, description="The components by name")] = None
 
     def get_component(self, name: str):
-        component = self._components_by_name.get(name, None)
+        component = self.components_by_name.get(name, None)
         if component is None:
-            raise ValueError(f"Component '{name}' not found in the project configuration. Available components: {list(self._components_by_name.keys())}")
+            raise ValueError(f"Component '{name}' not found in the project configuration. Available components: {list(self.components_by_name.keys())}")
         return component

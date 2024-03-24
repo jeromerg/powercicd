@@ -32,3 +32,20 @@ pip install powercicd
   - `git init`
 - edit the `power-project-dev.yaml`
   - change the `tenant` to the name of your tenant, e.g. `mytenant.onmicrosoft.com`
+- cd to the project folder
+
+### Open the powerbi report *my_report*
+
+```powershell
+function pow { python -m powercicd.pow $args }
+pow export_to_pbix my_report
+```
+## Development
+
+### Requirements
+
+- Python 3.11 or later
+- git
+- poetry
+
+```powershell

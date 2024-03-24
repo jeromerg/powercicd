@@ -1,8 +1,8 @@
 import logging
 import os
+
 from selenium.webdriver.chromium.webdriver import ChromiumDriver
 from selenium import webdriver
-
 
 log = logging.getLogger(__name__)
 
@@ -26,13 +26,13 @@ def configure_selenium_logger():
     LOGGER.propagate = False
     
     log_dir = os.path.dirname(SELENIUM_LOG_PATH)
-    log.info(f"Ensuring the log directory exists: '{log_dir}'")
+    log.debug(f"Ensuring the log directory exists: '{log_dir}'")
     os.makedirs(log_dir, exist_ok=True)
     selenium_handler = logging.FileHandler(SELENIUM_LOG_PATH)
     selenium_handler.setLevel(logging.INFO)
     selenium_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
     LOGGER.addHandler(selenium_handler)
-    log.info(f"Configured the Selenium logger to write to '{SELENIUM_LOG_PATH}'")
+    log.debug(f"Configured the Selenium logger to write to '{SELENIUM_LOG_PATH}'")
     
 
 def new_browser(tenant: str, keep_browser_open: bool) -> ChromiumDriver:

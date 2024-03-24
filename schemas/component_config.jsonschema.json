@@ -1,0 +1,367 @@
+{
+  "$defs": {
+    "ComponentConfig": {
+      "properties": {
+        "type": {
+          "const": null,
+          "default": null,
+          "description": "The type of the component",
+          "title": "Type"
+        },
+        "name": {
+          "description": "The name of the component",
+          "title": "Name",
+          "type": "string"
+        },
+        "depends_on": {
+          "description": "The components this component depends on",
+          "items": {
+            "type": "string"
+          },
+          "title": "Depends On",
+          "type": "array"
+        },
+        "parent_project": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ProjectConfig"
+            }
+          ],
+          "default": null,
+          "description": "The root folder of the component"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "ComponentConfig",
+      "type": "object"
+    },
+    "DatasetRefreshSchedule": {
+      "properties": {
+        "enabled": {
+          "description": "Whether the refresh schedule is enabled",
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "localTimeZoneId": {
+          "description": "The local time zone ID",
+          "examples": [
+            "UTC",
+            "Romance Standard Time"
+          ],
+          "title": "Localtimezoneid",
+          "type": "string"
+        },
+        "days": {
+          "description": "The days of the week when the refresh should occur",
+          "enum": [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+          ],
+          "title": "Days",
+          "type": "string"
+        },
+        "times": {
+          "description": "The times of the day when the refresh should occur",
+          "examples": [
+            "00:00",
+            "12:00"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Times",
+          "type": "array"
+        },
+        "NotifyOption": {
+          "description": "The notification option",
+          "enum": [
+            "MailOnFailure",
+            "NoNotification"
+          ],
+          "title": "Notifyoption",
+          "type": "string"
+        }
+      },
+      "required": [
+        "enabled",
+        "localTimeZoneId",
+        "days",
+        "times",
+        "NotifyOption"
+      ],
+      "title": "DatasetRefreshSchedule",
+      "type": "object"
+    },
+    "PowerAppsComponentConfig": {
+      "properties": {
+        "type": {
+          "const": "powerapps",
+          "default": "powerapps",
+          "description": "The type of the component",
+          "title": "Type"
+        },
+        "name": {
+          "description": "The name of the component",
+          "title": "Name",
+          "type": "string"
+        },
+        "depends_on": {
+          "description": "The components this component depends on",
+          "items": {
+            "type": "string"
+          },
+          "title": "Depends On",
+          "type": "array"
+        },
+        "parent_project": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ProjectConfig"
+            }
+          ],
+          "default": null,
+          "description": "The root folder of the component"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "PowerAppsComponentConfig",
+      "type": "object"
+    },
+    "PowerBiComponentConfig": {
+      "properties": {
+        "type": {
+          "const": "powerbi",
+          "default": "powerbi",
+          "description": "The type of the component",
+          "title": "Type"
+        },
+        "name": {
+          "description": "The name of the component",
+          "title": "Name",
+          "type": "string"
+        },
+        "depends_on": {
+          "description": "The components this component depends on",
+          "items": {
+            "type": "string"
+          },
+          "title": "Depends On",
+          "type": "array"
+        },
+        "parent_project": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ProjectConfig"
+            }
+          ],
+          "default": null,
+          "description": "The root folder of the component"
+        },
+        "group_name": {
+          "description": "The name of the group",
+          "title": "Group Name",
+          "type": "string"
+        },
+        "report_name": {
+          "description": "The name of the report",
+          "title": "Report Name",
+          "type": "string"
+        },
+        "refresh_schedule": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DatasetRefreshSchedule"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The schedule for the dataset refresh"
+        },
+        "dataset_parameters": {
+          "description": "The parameters for the dataset refresh",
+          "title": "Dataset Parameters",
+          "type": "object"
+        },
+        "powerapps_id_by_name": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The PowerApps ID by powerapps name",
+          "title": "Powerapps Id By Name"
+        }
+      },
+      "required": [
+        "name",
+        "group_name",
+        "report_name",
+        "refresh_schedule",
+        "dataset_parameters"
+      ],
+      "title": "PowerBiComponentConfig",
+      "type": "object"
+    },
+    "ProjectConfig": {
+      "properties": {
+        "tenant": {
+          "description": "The tenant of the project. Either the tenant ID or the tenant name (i.e. abc.onmicrosoft.com)",
+          "title": "Tenant",
+          "type": "string"
+        },
+        "version": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ProjectVersion"
+            }
+          ],
+          "description": "The version of the project"
+        },
+        "components": {
+          "items": {
+            "$ref": "#/$defs/ComponentConfig"
+          },
+          "title": "Components",
+          "type": "array"
+        },
+        "project_root": {
+          "default": null,
+          "description": "The root folder of the project",
+          "title": "Project Root",
+          "type": "string"
+        },
+        "components_by_name": {
+          "additionalProperties": {
+            "$ref": "#/$defs/ComponentConfig"
+          },
+          "default": null,
+          "description": "The components by name",
+          "title": "Components By Name",
+          "type": "object"
+        }
+      },
+      "required": [
+        "tenant",
+        "version"
+      ],
+      "title": "ProjectConfig",
+      "type": "object"
+    },
+    "ProjectVersion": {
+      "properties": {
+        "major": {
+          "description": "The major version of the project",
+          "title": "Major",
+          "type": "integer"
+        },
+        "minor": {
+          "description": "The minor version of the project",
+          "title": "Minor",
+          "type": "integer"
+        },
+        "build_ground": {
+          "description": "The ground number to subtract from the total amount of commits to calculate the build number",
+          "title": "Build Ground",
+          "type": "integer"
+        },
+        "resulting_version": {
+          "default": null,
+          "description": "The version of the project",
+          "title": "Resulting Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "major",
+        "minor",
+        "build_ground"
+      ],
+      "title": "ProjectVersion",
+      "type": "object"
+    },
+    "SharepointComponentConfig": {
+      "properties": {
+        "type": {
+          "const": "sharepoint",
+          "default": "sharepoint",
+          "description": "The type of the component",
+          "title": "Type"
+        },
+        "name": {
+          "description": "The name of the component",
+          "title": "Name",
+          "type": "string"
+        },
+        "depends_on": {
+          "description": "The components this component depends on",
+          "items": {
+            "type": "string"
+          },
+          "title": "Depends On",
+          "type": "array"
+        },
+        "parent_project": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ProjectConfig"
+            }
+          ],
+          "default": null,
+          "description": "The root folder of the component"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "SharepointComponentConfig",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "component": {
+      "description": "The component to deserialize",
+      "discriminator": {
+        "mapping": {
+          "powerapps": "#/$defs/PowerAppsComponentConfig",
+          "powerbi": "#/$defs/PowerBiComponentConfig",
+          "sharepoint": "#/$defs/SharepointComponentConfig"
+        },
+        "propertyName": "type"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/PowerBiComponentConfig"
+        },
+        {
+          "$ref": "#/$defs/PowerAppsComponentConfig"
+        },
+        {
+          "$ref": "#/$defs/SharepointComponentConfig"
+        }
+      ],
+      "title": "Component"
+    }
+  },
+  "required": [
+    "component"
+  ],
+  "title": "AllComponentsDeserializer",
+  "type": "object"
+}

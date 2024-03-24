@@ -7,6 +7,8 @@ import zipfile
 from jsonpath_ng.ext import parse
 import logging
 
+from powercicd.shared.logging_utils import log_call
+
 log = logging.getLogger(__name__)
 
 
@@ -174,6 +176,7 @@ def convert_src_code_to_original_layout(
     os.remove(code_file)
 
 
+@log_call()
 def convert_pbix_to_src_code(
     pbix_file: str, 
     src_code_folder: str,
@@ -198,18 +201,19 @@ def convert_pbix_to_src_code(
     log.info(f"Copying done.")
 
 
+@log_call()
 def convert_src_code_to_pbix(
-    src_folder: str, 
-    pbix_file: str, 
+    src_code_folder: str,
+    pbix_filepath: str,
     temp_folder: str,
     powerapps_id_by_name: dict,
     version: str
 ):
     pbix_content_dir = f"{temp_folder}/pbix_content"
-    log.info(f"Copying content of '{src_folder}/' to '{pbix_content_dir}/'")
+    log.info(f"Copying content of '{src_code_folder}/' to '{pbix_content_dir}/'")
     if os.path.exists(pbix_content_dir):
         shutil.rmtree(pbix_content_dir)
-    shutil.copytree(src_folder, pbix_content_dir)
+    shutil.copytree(src_code_folder, pbix_content_dir)
     log.info(f"Copying done.")
 
     # transform "src layout" to "original layout"
@@ -218,9 +222,9 @@ def convert_src_code_to_pbix(
     log.info(f"Converting '{code_file}' to '{original_file}'")
     convert_src_code_to_original_layout(code_file, original_file, temp_folder, powerapps_id_by_name, version)
 
-    log.info(f"Zipping '{pbix_content_dir}' to '{pbix_file}'")
-    os.makedirs(os.path.dirname(pbix_file), exist_ok=True)
-    with zipfile.ZipFile(pbix_file, 'w', zipfile.ZIP_STORED) as zip_ref:
+    log.info(f"Zipping '{pbix_content_dir}' to '{pbix_filepath}'")
+    os.makedirs(os.path.dirname(pbix_filepath), exist_ok=True)
+    with zipfile.ZipFile(pbix_filepath, 'w', zipfile.ZIP_STORED) as zip_ref:
         for root, dirs, files in os.walk(pbix_content_dir):
             for file in files:
                 abs_path = f"{root}/{file}"
