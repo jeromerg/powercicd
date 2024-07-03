@@ -17,11 +17,11 @@ NotifyOption = Literal["MailOnFailure", "NoNotification"]
 
 
 class DatasetRefreshSchedule(BaseModel):
-    enabled         : Annotated[bool         , Field(description="Whether the refresh schedule is enabled")]
-    localTimeZoneId : Annotated[str          , Field(description="The local time zone ID", examples=["UTC", "Romance Standard Time"])]
-    days            : Annotated[WeekDays     , Field(description="The days of the week when the refresh should occur")]
-    times           : Annotated[List[str]    , Field(description="The times of the day when the refresh should occur", examples=["00:00", "12:00"])]
-    NotifyOption    : Annotated[NotifyOption , Field(description="The notification option")]
+    enabled         : Annotated[bool           , Field(description="Whether the refresh schedule is enabled")]
+    localTimeZoneId : Annotated[str            , Field(description="The local time zone ID", examples=["UTC", "Romance Standard Time"])]
+    days            : Annotated[List[WeekDays] , Field(description="The days of the week when the refresh should occur")]
+    times           : Annotated[List[str]      , Field(description="The times of the day when the refresh should occur", examples=["00:00", "12:00"])]
+    NotifyOption    : Annotated[NotifyOption   , Field(description="The notification option")]
 
 
 class PowerBiComponentConfig(ComponentConfig):

@@ -1,6 +1,8 @@
 # %%
 import logging
+import os
 import re
+from datetime import datetime
 
 import typer
 from typing_extensions import Annotated
@@ -18,6 +20,13 @@ log = logging.getLogger(__name__)
 main_cli = typer.Typer()
 powerbi_cli = typer.Typer()
 main_cli.add_typer(powerbi_cli, name="powerbi")
+
+
+def get_tmp_dir(project_root, suffix):
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
+    tmp_dir = f"{project_root}/temp/{timestamp}-{suffix}"
+    os.makedirs(tmp_dir, exist_ok=True)
+    return tmp_dir
 
 
 @main_cli.callback(no_args_is_help=True)
@@ -91,7 +100,7 @@ def deploy(
             group = pbi.get_group_by_name(component_config.group)
             upload_report_name = f"{component_config.report_name} {project_config.version.resulting_version}"
 
-            tmp_folder = f"{component_config.component_root}/temp/deploy"
+            tmp_folder = get_tmp_dir(project_config.project_root, "deploy")
             src_code_folder = f"{component_config.component_root}/src"
             pbix_filepath = f"{tmp_folder}/{upload_report_name}.pbix"
 
@@ -102,7 +111,7 @@ def deploy(
             powerbi_utils.convert_src_code_to_pbix(
                 src_code_folder=src_code_folder,
                 pbix_filepath=pbix_filepath,
-                temp_folder=tmp_folder,
+                tmp_folder=tmp_folder,
                 powerapps_id_by_name=component_config.powerapps_id_by_name,
                 version=project_config.version.resulting_version,
             )
@@ -132,41 +141,41 @@ def deploy(
 @powerbi_cli.command("import")
 def import_from_pbix(
     ctx: typer.Context,
-    component: Annotated[str, typer.Argument(
+    pbix_file: Annotated[str, typer.Option(...,
+        help="The pbix file to import from"
+    )],
+    component: Annotated[str, typer.Argument(...,
         help="The component to import to"
     )],
-    pbix_file: Annotated[str, typer.Argument(
-        help="The pbix file to import from"
-    )]
 ):
     project_config   : ProjectConfig = ctx.obj
     component_config = project_config.get_component(component)
-    src_code_folder  = component_config.component_root
-    tmp_folder       = f"{src_code_folder}/temp/import_from_pbix"
+    src_code_folder  = f"{component_config.component_root}/src"
+    tmp_folder       = get_tmp_dir(project_config.project_root, "import_from_pbix")
     powerbi_utils.convert_pbix_to_src_code(pbix_file, src_code_folder, tmp_folder)
 
 
 @powerbi_cli.command("export")
 def export_to_pbix(
     ctx: typer.Context,
-    component: Annotated[str, typer.Argument(
+    pbix_file: Annotated[str, typer.Option(...,
+        help="The pbix file to export to"
+    )],
+    component: Annotated[str, typer.Argument(...,
         help="The component to import to"
     )],
-    pbix_file: Annotated[str, typer.Argument(
-        help="The pbix file to export to"
-    )]
 ):
     project_config   : ProjectConfig = ctx.obj
     component_config = project_config.get_component(component)
-    src_code_folder  = component_config.component_root
-    tmp_folder       = f"{src_code_folder}/temp/export_to_pbix"
+    src_code_folder  = f"{component_config.component_root}/src"
+    tmp_folder       = get_tmp_dir(project_config.project_root, "export_to_pbix")
 
     powerbi_utils.convert_src_code_to_pbix(
-        pbix_file,
-        src_code_folder,
-        component_config.name,
-        component_config.parent_project.version.resulting_version,
-        tmp_folder
+        src_code_folder      = src_code_folder,
+        pbix_filepath        = pbix_file,
+        tmp_folder           = tmp_folder,
+        powerapps_id_by_name = component_config.powerapps_id_by_name,
+        version              = project_config.version.resulting_version
     )
 
 

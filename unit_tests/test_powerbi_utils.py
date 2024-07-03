@@ -46,12 +46,12 @@ def test_convert_pbix_to_src_code(tmp_dir):
 def test_convert_src_code_to_pbix(tmp_dir):
     pbix_file = f"{tmp_dir}/test_report.pbix"
     src_folder = f"{THIS_FILE_DIR}/test_samples/test_report"
-    temp_folder = f"{tmp_dir}/tmp_dir"
+    tmp_folder = f"{tmp_dir}/tmp_dir"
     powerapps_id_by_name = {
         "my_powerapps_app": "b944ef36-81f7-482c-a6d6-f29c9f89eabc"
     }
     version = "the build will replace this content by the report version"
-    convert_src_code_to_pbix(src_folder, pbix_file, temp_folder, powerapps_id_by_name, version)
+    convert_src_code_to_pbix(src_folder, pbix_file, tmp_folder, powerapps_id_by_name, version)
 
     # unzip the pbix file
     with zipfile.ZipFile(pbix_file, 'r') as zip_ref:

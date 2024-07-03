@@ -11,9 +11,9 @@ refresh_schedule:
     - Thursday
     - Friday
   times:
-    - 08:00
-    - 12:00
-    - 16:00
+    - "08:00"
+    - "12:00"
+    - "16:00"
   NotifyOption: NoNotification
 dataset_parameters:
   STAGE: DEV

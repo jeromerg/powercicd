@@ -24,14 +24,15 @@ log = logging.getLogger(__name__)
 
 
 class AllComponentsDeserializer(BaseModel):
-    component: AnyComponent = Field(..., description="The component to deserialize", discriminator="type")
+    component: AnyComponent = Field(..., description="The component configuration", discriminator="type")
 
     @classmethod
     def deserialize_file(cls, component_config_file: Any) -> AnyComponent:
         log.info(f"Reading component config from '{component_config_file}'")
         with open(component_config_file, 'r', encoding='utf-8') as f:
             component_config_json = yaml.safe_load(f)
-        return cls.model_validate(component_config_json).component
+        containing_config_json = {"component": component_config_json}
+        return cls.model_validate(containing_config_json).component
 
 
 def get_current_version(project_root: str, project_config: ProjectConfig):
@@ -39,20 +40,46 @@ def get_current_version(project_root: str, project_config: ProjectConfig):
     minor_version = project_config.version.minor
     build_ground  = project_config.version.build_ground
 
-    count_commits = int(os.popen(f"git -C {project_root} rev-list HEAD --count").read().strip())
-    are_changes = os.popen(f"git -C {project_root} status --porcelain").read().strip() != ""
+    # Case 1: project folder is outside git work tree
+    cmd = f"git -C {project_root} rev-parse --is-inside-work-tree"
+    log.info(f"Executing command: {cmd}")
+    response = os.popen(cmd).read()
+    log.info(f"Response: '{response}'")
+    if response.strip() != "true":
+        log.info(f"Project folder is outside git work tree, then keep version '{major_version}.{minor_version}.{build_ground}' unchanged")
+        return f"{major_version}.{minor_version}.{build_ground}"
+    
+    # Case 2: project folder is inside git work tree but no commits at all (not even HEAD)
+    cmd = f"git -C {project_root} rev-list --all"
+    log.info(f"Executing command: {cmd}")
+    response = os.popen(cmd).read()
+    log.info(f"Response: '{response}'")
+    if response.strip() == "":
+        log.info(f"No commits found in '{project_root}', then keep version '{major_version}.{minor_version}.{build_ground}' unchanged")
+        return f"{major_version}.{minor_version}.{build_ground}"
+
+    # Case 3: project folder is inside git work tree and there are commits
+    cmd = f"git -C {project_root} rev-list HEAD --count"
+    log.info(f"Executing command: {cmd}")
+    response = os.popen(cmd).read()
+    log.info(f"Response: '{response}'")
+    count_commits = int(response.strip())
     build_number = count_commits - build_ground
-    if are_changes:
-        version = f"{major_version}.{minor_version}.{build_number}M"
-    else:
-        version = f"{major_version}.{minor_version}.{build_number}"
+    
+    cmd = f"git -C {project_root} status --porcelain"
+    log.info(f"Executing command: {cmd}")
+    response = os.popen(cmd).read()
+    log.info(f"Response: '{response}'")
+    modified_flag = "M" if response.strip() != "" else ""
+    version = f"{major_version}.{minor_version}.{build_number}{modified_flag}"
     log.info(f"Version: {version}")
     return version
 
 
 def get_project_config(stage: str, lookup_path: str = None) -> ProjectConfig:
     project_config_filename = PROJECT_CONFIG_FILENAME_FMT.format(env=stage)
-    component_config_filename = COMPONENT_CONFIG_FILENAME_FMT.format(env=stage)
+    component_config_all_stage_filename_blob = COMPONENT_CONFIG_FILENAME_FMT.format(env="*")
+    component_config_stage_filename = COMPONENT_CONFIG_FILENAME_FMT.format(env=stage)
 
     if lookup_path is None:
         lookup_path = os.getcwd()
@@ -73,12 +100,18 @@ def get_project_config(stage: str, lookup_path: str = None) -> ProjectConfig:
 
     # load component configs
     project_config.components = []
-    component_config_files = [f for f in glob.glob(f"{project_root}/{component_config_filename}")]
+    component_config_files = [f for f in glob.glob(f"{project_root}/*/{component_config_stage_filename}")]
     for component_config_file in component_config_files:
-        log.info(f"Reading component config from '{component_config_file}'")
+        # name of parent directory is the name of the component
+        component_name = os.path.basename(os.path.dirname(component_config_file))
+
+        log.info(f"Reading component '{component_name}' config from '{component_config_file}'")
         component_config = AllComponentsDeserializer.deserialize_file(component_config_file)
         component_config.parent_project = project_config
+        component_config.name = component_name
         project_config.components.append(component_config)
+
+    # TODO: validate that all component implement a config for all stages
 
     return project_config
 

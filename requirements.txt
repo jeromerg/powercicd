@@ -1,7 +1,6 @@
 requests
 selenium
 ipykernel
-click
 jsonpath-ng
 pydantic
 azure-identity

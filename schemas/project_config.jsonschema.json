@@ -8,11 +8,6 @@
           "description": "The type of the component",
           "title": "Type"
         },
-        "name": {
-          "description": "The name of the component",
-          "title": "Name",
-          "type": "string"
-        },
         "depends_on": {
           "description": "The components this component depends on",
           "items": {
@@ -20,6 +15,11 @@
           },
           "title": "Depends On",
           "type": "array"
+        },
+        "name": {
+          "description": "The name of the component",
+          "title": "Name",
+          "type": "string"
         },
         "parent_project": {
           "allOf": [
@@ -64,15 +64,6 @@
           "description": "The root folder of the project",
           "title": "Project Root",
           "type": "string"
-        },
-        "components_by_name": {
-          "additionalProperties": {
-            "$ref": "#/$defs/ComponentConfig"
-          },
-          "default": null,
-          "description": "The components by name",
-          "title": "Components By Name",
-          "type": "object"
         }
       },
       "required": [

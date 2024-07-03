@@ -8,11 +8,6 @@
           "description": "The type of the component",
           "title": "Type"
         },
-        "name": {
-          "description": "The name of the component",
-          "title": "Name",
-          "type": "string"
-        },
         "depends_on": {
           "description": "The components this component depends on",
           "items": {
@@ -20,6 +15,11 @@
           },
           "title": "Depends On",
           "type": "array"
+        },
+        "name": {
+          "description": "The name of the component",
+          "title": "Name",
+          "type": "string"
         },
         "parent_project": {
           "allOf": [
@@ -107,11 +107,6 @@
           "description": "The type of the component",
           "title": "Type"
         },
-        "name": {
-          "description": "The name of the component",
-          "title": "Name",
-          "type": "string"
-        },
         "depends_on": {
           "description": "The components this component depends on",
           "items": {
@@ -119,6 +114,11 @@
           },
           "title": "Depends On",
           "type": "array"
+        },
+        "name": {
+          "description": "The name of the component",
+          "title": "Name",
+          "type": "string"
         },
         "parent_project": {
           "allOf": [
@@ -144,11 +144,6 @@
           "description": "The type of the component",
           "title": "Type"
         },
-        "name": {
-          "description": "The name of the component",
-          "title": "Name",
-          "type": "string"
-        },
         "depends_on": {
           "description": "The components this component depends on",
           "items": {
@@ -156,6 +151,11 @@
           },
           "title": "Depends On",
           "type": "array"
+        },
+        "name": {
+          "description": "The name of the component",
+          "title": "Name",
+          "type": "string"
         },
         "parent_project": {
           "allOf": [
@@ -246,15 +246,6 @@
           "description": "The root folder of the project",
           "title": "Project Root",
           "type": "string"
-        },
-        "components_by_name": {
-          "additionalProperties": {
-            "$ref": "#/$defs/ComponentConfig"
-          },
-          "default": null,
-          "description": "The components by name",
-          "title": "Components By Name",
-          "type": "object"
         }
       },
       "required": [
@@ -304,11 +295,6 @@
           "description": "The type of the component",
           "title": "Type"
         },
-        "name": {
-          "description": "The name of the component",
-          "title": "Name",
-          "type": "string"
-        },
         "depends_on": {
           "description": "The components this component depends on",
           "items": {
@@ -316,6 +302,11 @@
           },
           "title": "Depends On",
           "type": "array"
+        },
+        "name": {
+          "description": "The name of the component",
+          "title": "Name",
+          "type": "string"
         },
         "parent_project": {
           "allOf": [
@@ -334,34 +325,25 @@
       "type": "object"
     }
   },
-  "properties": {
-    "component": {
-      "description": "The component to deserialize",
-      "discriminator": {
-        "mapping": {
-          "powerapps": "#/$defs/PowerAppsComponentConfig",
-          "powerbi": "#/$defs/PowerBiComponentConfig",
-          "sharepoint": "#/$defs/SharepointComponentConfig"
-        },
-        "propertyName": "type"
-      },
-      "oneOf": [
-        {
-          "$ref": "#/$defs/PowerBiComponentConfig"
-        },
-        {
-          "$ref": "#/$defs/PowerAppsComponentConfig"
-        },
-        {
-          "$ref": "#/$defs/SharepointComponentConfig"
-        }
-      ],
-      "title": "Component"
-    }
+  "description": "The component configuration",
+  "discriminator": {
+    "mapping": {
+      "powerapps": "#/$defs/PowerAppsComponentConfig",
+      "powerbi": "#/$defs/PowerBiComponentConfig",
+      "sharepoint": "#/$defs/SharepointComponentConfig"
+    },
+    "propertyName": "type"
   },
-  "required": [
-    "component"
+  "oneOf": [
+    {
+      "$ref": "#/$defs/PowerBiComponentConfig"
+    },
+    {
+      "$ref": "#/$defs/PowerAppsComponentConfig"
+    },
+    {
+      "$ref": "#/$defs/SharepointComponentConfig"
+    }
   ],
-  "title": "AllComponentsDeserializer",
-  "type": "object"
+  "title": "Component"
 }
